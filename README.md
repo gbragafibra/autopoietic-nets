@@ -16,3 +16,5 @@ If a unit maintains its state after an iteration, regardless of its neighbors, i
 [![autopoietic_nets](https://img.youtube.com/vi/Az061cv_s7A/0.jpg)](https://www.youtube.com/watch?v=Az061cv_s7A)
 
 [![autopoietic_nets_2](https://img.youtube.com/vi/Xld3kpEcM7I/0.jpg)](https://www.youtube.com/watch?v=Xld3kpEcM7I)
+
+[![autopoietic_nets_3](https://img.youtube.com/vi/l1IBHiAJpPs/0.jpg)](https://www.youtube.com/watch?v=l1IBHiAJpPs)
