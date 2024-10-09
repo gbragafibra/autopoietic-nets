@@ -19,7 +19,7 @@ Params and conditions
 N = 500 #neuron count -> N² neurons generated
 N_iter = 20 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
-fix = False #to have ε fixed
+fix = True #to have ε fixed
 ε_fixed = 2 #if ε fixed
 k = 6 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
@@ -30,7 +30,7 @@ compare condition between Φ and ε
 If True -> Ensemble when Φ >= ε
 If False -> Ensemble when Φ == ε
 """
-geq_cond = False 
+geq_cond = True 
 #----------------------------
 
 
@@ -62,15 +62,31 @@ def update(*args):
     global S, Φ, ε
     #choose a gate randomly for each iteration (globally)
     gate = np.random.choice(gates) 
+    if extended:
+        #Getting neighbors by shifting matrix
+        left = np.roll(S, -1, axis = 1)
+        right = np.roll(S, 1, axis = 1)
+        up = np.roll(S, 1, axis = 0)
+        down = np.roll(S, -1, axis = 0)
+        upper_left = np.roll(np.roll(S, 1, axis = 0), -1, axis = 1)
+        upper_right = np.roll(np.roll(S, 1, axis = 0), 1, axis = 1)
+        bottom_left = np.roll(np.roll(S, -1, axis = 0), -1, axis = 1)
+        bottom_right = np.roll(np.roll(S, -1, axis = 0), 1, axis = 1)
 
-    #Getting neighbors by shifting matrix
-    left = np.roll(S, -1, axis = 1)
-    right = np.roll(S, 1, axis = 1)
-    up = np.roll(S, 1, axis = 0)
-    down = np.roll(S, -1, axis = 0)
+        # stack neighbor states
+        neighbors = np.stack([left, right, up, down, upper_left,
+         upper_right, bottom_left, bottom_right], axis = 0)
 
-    # stack neighbor states
-    neighbors = np.stack([left, right, up, down], axis = 0)
+
+    else:
+        #Getting neighbors by shifting matrix
+        left = np.roll(S, -1, axis = 1)
+        right = np.roll(S, 1, axis = 1)
+        up = np.roll(S, 1, axis = 0)
+        down = np.roll(S, -1, axis = 0)
+
+        # stack neighbor states
+        neighbors = np.stack([left, right, up, down], axis = 0)
 
     #return new state
     new_state = gate(neighbors)
