@@ -19,9 +19,9 @@ Params and conditions
 N = 500 #neuron count -> N² neurons generated
 N_iter = 20 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
-fix = True #to have ε fixed
-ε_fixed = 2 #if ε fixed
-k = 6 #If not fixed -> used denominator -> At max ε -> N_iter/k
+fix = False #to have ε fixed
+ε_fixed = 15#if ε fixed
+k = 7 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 extended = True #Considering also diagonal neighbors
 
@@ -58,10 +58,16 @@ cbar2 = fig.colorbar(mat2, ax=ax2)
 cbar2.set_label("Synchronization Count (Φ)")
 
 
+#if to have individual gate assignment for each neuron
+#only at start doesn't update over iterations
+gate = np.random.choice(gates, (N, N))
+
 def update(*args):
     global S, Φ, ε
+    #------
     #choose a gate randomly for each iteration (globally)
-    gate = np.random.choice(gates) 
+    #gate = np.random.choice(gates) 
+    #------
     if extended:
         #Getting neighbors by shifting matrix
         left = np.roll(S, -1, axis = 1)
@@ -89,7 +95,12 @@ def update(*args):
         neighbors = np.stack([left, right, up, down], axis = 0)
 
     #return new state
-    new_state = gate(neighbors)
+    #new_state = gate(neighbors) #if for global gate assignment
+
+    #for individual assignment of gates
+    new_state = np.array([[gate[i, j](neighbors[:, i, j]) for j in range(N)] for i in range(N)])
+
+
     sync = (new_state == S)
     Φ[sync] += 1 
     Φ[~sync] = 0
@@ -128,5 +139,4 @@ def update(*args):
 
 ani = FuncAnimation(fig, update, frames=N_iter, interval=1000)
 ani.save("autopoietic_net.gif", writer="pillow", fps=10)
-
-plt.show()
+#plt.show()
