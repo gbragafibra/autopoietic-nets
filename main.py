@@ -19,11 +19,11 @@ Params and conditions
 N = 500 #neuron count -> N² neurons generated
 N_iter = 20 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
-fix = False #to have ε fixed
-ε_fixed = 15#if ε fixed
+fix = True #to have ε fixed
+ε_fixed = 2#if ε fixed
 k = 7 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
-extended = True #Considering also diagonal neighbors
+extended = False #Considering also diagonal neighbors
 
 """
 compare condition between Φ and ε
@@ -62,8 +62,12 @@ cbar2.set_label("Synchronization Count (Φ)")
 #only at start doesn't update over iterations
 gate = np.random.choice(gates, (N, N))
 
-def update(*args):
+def update(frame, *args):
     global S, Φ, ε
+
+    print(f"Iteration {frame}/{N_iter}")
+
+
     #------
     #choose a gate randomly for each iteration (globally)
     #gate = np.random.choice(gates) 
@@ -139,4 +143,5 @@ def update(*args):
 
 ani = FuncAnimation(fig, update, frames=N_iter, interval=1000)
 ani.save("autopoietic_net.gif", writer="pillow", fps=10)
+print("Finished!")
 #plt.show()
