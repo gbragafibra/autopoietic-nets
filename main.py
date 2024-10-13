@@ -21,9 +21,9 @@ N_iter = 20 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
 ε_fixed = 2#if ε fixed
-k = 7 #If not fixed -> used denominator -> At max ε -> N_iter/k
+k = 8 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
-extended = False #Considering also diagonal neighbors
+extended = True #Considering also diagonal neighbors
 
 """
 compare condition between Φ and ε
@@ -63,10 +63,14 @@ cbar2.set_label("Synchronization Count (Φ)")
 gate = np.random.choice(gates, (N, N))
 
 def update(frame, *args):
-    global S, Φ, ε
+    global S, Φ, ε, gate
 
-    print(f"Iteration {frame}/{N_iter}")
+    print(f"Iteration {frame + 1}/{N_iter}")
 
+    # reallocate gate choice again (local-wise)
+    # if synchronization count too high
+    if np.mean(Φ) >= ε:
+        gate = np.random.choice(gates, (N, N))
 
     #------
     #choose a gate randomly for each iteration (globally)
