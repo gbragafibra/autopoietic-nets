@@ -48,27 +48,6 @@ k = 4 #If not fixed -> used denominator -> At max ε -> N_iter/k
 
 radius = 2.5 #radius for consideration
 
-
-
-# This is bad, just need to compute the output, given
-# a certain gate and the corresponding neighbors (given distance)
-# Don't need to compute neighbors again
-# As in the following example
-# Don't need this function either
-# Can just include in the update() func
-def compute_state(S, r, gate):
-    N = S.shape[0]
-    x, y = np.indices(S.shape)
-    new_state = np.zeros(S.shape)
-
-    for i in range(N):
-        for j in range(N):
-            d = np.sqrt((x - i)**2 + (y - j)**2)
-            mask = (d <= r**2) #this should give me a subset
-            new_state[i, j] = gate(S[mask])
-
-    return new_state
-
 """
 compare condition between Φ and ε
 If True -> Ensemble when Φ >= ε
