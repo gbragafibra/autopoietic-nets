@@ -16,6 +16,8 @@ If a unit maintains its state after an iteration, regardless of its neighbors, i
 
 ##### Some examples (euclidean automata)
 
+![](autopoietic_complex6/complex19.gif)
+
 ![](autopoietic_complex6/complex1.gif)
 
 ![](autopoietic_complex6/complex3.gif)
