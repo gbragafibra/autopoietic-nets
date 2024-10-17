@@ -11,7 +11,6 @@ def OR(inputs):
 
 def XOR(inputs): #not sure if this is the correct description of XOR (continuous)
     return np.sin(np.pi * np.sum(inputs))**2
-
 #-----------------------------
 gates = [AND, OR, XOR]
 
@@ -21,11 +20,12 @@ N = 200 # generating N² neurons
 N_iter = 20  # num of iterations
 S = np.random.rand(N, N) # ∈ [0, 1]
 
-ε = 1
+ε = 2
 Φ = np.zeros((N, N), dtype=int)
+θ = 1e-6 #precision exponent
 
 radius = 2.5
-σ = 3 #std for gaussian
+σ = 1.5 #std for gaussian
 
 """
 if mean of Φ >= ε -> update gates; gate_update = True
@@ -44,7 +44,6 @@ geq_cond = False
 x, y = np.indices((N, N)) - N // 2
 gaussian_weights = np.exp(-((x**2 + y**2) / (2 * σ**2)))
 gaussian_weights /= np.sum(gaussian_weights) #normalize
-
 
 # init plot
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -71,7 +70,6 @@ def update(frame, *args):
             gate = np.random.choice(gates, (N, N))
 
     new_state = np.zeros(S.shape)
-    
     # state update with gaussian weights
     for i in range(N):
         for j in range(N):
@@ -81,7 +79,7 @@ def update(frame, *args):
             new_state[i, j] = gate[i, j](weighted_inputs)
 
     # Synchronization update
-    sync = np.isclose(new_state, S, atol=1e-6)
+    sync = np.isclose(new_state, S, atol=θ) #precision really affects emergent behaviour
     Φ = np.where(sync, Φ + 1, 0)
 
     # Ensemble formation condition
@@ -99,7 +97,7 @@ def update(frame, *args):
     mat1.set_array(S)
     mat2.set_array(Φ)
 
-    ax1.set_title(f"Threshold (ε): {ε}; R: {radius}; σ: {σ}, Update gates: {gate_update}")
+    ax1.set_title(f"Threshold (ε): {ε}; R: {radius}; σ: {σ}, Update gates: {gate_update}; Precision: {θ}")
     return mat1, mat2
 
 ani = FuncAnimation(fig, update, frames=N_iter, interval=1000)
