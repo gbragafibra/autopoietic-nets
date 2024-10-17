@@ -37,12 +37,12 @@ def H(S):
 """
 Params and conditions
 """
-N = 200 #neuron count -> N² neurons generated
+N = 500 #neuron count -> N² neurons generated
 N_iter = 20 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
-ε_fixed = 1#if ε fixed 
-k = 4 #If not fixed -> used denominator -> At max ε -> N_iter/k
+ε_fixed = 2#if ε fixed 
+k = 2.5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
@@ -92,37 +92,40 @@ def update(frame, *args):
 
     # reallocate gate choice again (local-wise)
     # if synchronization count too high
+
     """
     if np.mean(Φ) >= ε:
         gate = np.random.choice(gates, (N, N))
     """
+
     #------
     #choose a gate randomly for each iteration (globally)
     #gate = np.random.choice(gates) 
     #------
     x, y = np.indices(S.shape)
     new_state = np.zeros(S.shape)
-
     d_mask = np.sqrt((x - N//2)**2 + (y - N//2)**2) <= radius #distance mask 
 
+    """ vectorized code (gets process killed) -> Creating array with N⁴ elements!
+    # Can't precompute the masks' shifting
+    #array that contains each mask (neighborhood; True or False) for each point
+    d_mask_shift = np.array([np.roll(np.roll(d_mask, i - N//2, axis=0), j - N//2, axis=1)
+        for i in range(N) for j in range(N)]).reshape(N, N, N, N)
 
-    #state update
+    new_state = np.array([[gate[i, j](S[d_mask_shift[i, j]]) for j in range(N)] for i in range(N)])
+    """
+
+    #state update (non-vectorized)
     for i in range(N):
         for j in range(N):
-            # shift the distance mask
-            mask = np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)
-            new_state[i, j] = gate[i, j](S[mask]) #local
-            #new_state[i, j] = gate(S[mask]) #global
-
+            mask = np.roll(np.roll(d_mask, i - N//2, axis=0), j - N//2, axis=1)
+            new_state[i, j] = gate[i, j](S[mask])
 
     sync = (new_state == S)
-    Φ[sync] += 1 
-    Φ[~sync] = 0
+    
+    Φ = np.where(sync, Φ + 1, 0)
 
-    if geq_cond:
-        mask_ensemble = (Φ >= ε)
-    else:
-        mask_ensemble = (Φ == ε)
+    mask_ensemble = Φ >= ε if geq_cond else Φ == ε
     ε = dynamics(fixed = fix)
     S = new_state #update state
     # update given any ensemble formation
