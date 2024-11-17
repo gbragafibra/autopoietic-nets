@@ -21,10 +21,19 @@ def OR(inputs):
 def XOR(inputs):
     return (np.sum(inputs) % 2).astype(int)
 
+def NAND(inputs):
+    return 1 - AND(inputs)
+
+def NOR(inputs):
+    return 1 - OR(inputs)
+
+def XNOR(inputs):
+    return 1 - XOR(inputs)
+
 #----------------------------
 
 
-gates = [AND, OR, XOR] #more interesting behaviour without neg gates
+gates = [AND, OR, XOR, NAND, NOR, XNOR]
 
 #Compute entropy of the net
 def H(S):
@@ -38,7 +47,7 @@ def H(S):
 Params and conditions
 """
 N = 500 #neuron count -> N² neurons generated
-N_iter = 20 #number of iterations
+N_iter = 50 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
 ε_fixed = 2#if ε fixed 
@@ -46,7 +55,7 @@ k = 2.5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 2.5 #radius for consideration
+radius = 4.5 #radius for consideration
 
 """
 compare condition between Φ and ε
