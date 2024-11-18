@@ -1,8 +1,13 @@
 """
-Includes a neighborhood introduced by a gaussian,
-instead of Moore neighborhood.
-"""
+With euclidean neighborhood
+instead of Moore's
 
+This script is the one which
+leads to the most interesting
+behaviour, namely to that
+similar to autopoiesis
+(although it's still far from it)
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -34,6 +39,7 @@ def XNOR(inputs):
 
 
 gates = [AND, OR, XOR, NAND, NOR, XNOR]
+#gates = [AND, OR, XOR] #without neg gates
 
 #Compute entropy of the net
 def H(S):
@@ -50,12 +56,12 @@ N = 500 #neuron count -> N² neurons generated
 N_iter = 50 #number of iterations
 S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
-ε_fixed = 2#if ε fixed 
+ε_fixed = 5#if ε fixed 
 k = 2.5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 4.5 #radius for consideration
+radius = 5.5#radius for consideration
 
 """
 compare condition between Φ and ε
