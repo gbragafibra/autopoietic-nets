@@ -38,8 +38,8 @@ def XNOR(inputs):
 #----------------------------
 
 
-gates = [AND, OR, XOR, NAND, NOR, XNOR]
-#gates = [AND, OR, XOR] #without neg gates
+#gates = [AND, OR, XOR, NAND, NOR, XNOR]
+gates = [AND, OR, XOR] #without neg gates
 
 #Compute entropy of the net
 def H(S):
@@ -52,16 +52,18 @@ def H(S):
 """
 Params and conditions
 """
-N = 500 #neuron count -> N² neurons generated
+N = 200 #neuron count -> N² neurons generated
 N_iter = 50 #number of iterations
-S = np.random.choice((0,1), size = (N, N)) #init state
+S = np.zeros((N, N))
+S[80:120, 80:120] = 1
+#S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
-ε_fixed = 5#if ε fixed 
+ε_fixed = 3#if ε fixed 
 k = 2.5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 5.5#radius for consideration
+radius = 2.5#radius for consideration
 
 """
 compare condition between Φ and ε
