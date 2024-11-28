@@ -18,6 +18,14 @@ There are multiple variants, such that [main2.py](https://github.com/gbragafibra
 
 It is worth noting that the aim is to get behaviour increasingly closer to being characterized as autopoietic, and that these examples are far from such.
 
+![](autopoietic_complex11/complex4.gif)
+
+![](autopoietic_complex11/complex5.gif)
+
+![](autopoietic_complex11/complex7.gif)
+
+![](autopoietic_complex11/complex8.gif)
+
 ![](autopoietic_complex8/complex13.gif)
 
 ![](autopoietic_complex8/complex14.gif)
