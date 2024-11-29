@@ -26,6 +26,18 @@ It is worth noting that the aim is to get behaviour increasingly closer to being
 
 ![](autopoietic_complex11/complex8.gif)
 
+![](autopoietic_complex11/complex13.gif)
+
+![](autopoietic_complex11/complex15.gif)
+
+![](autopoietic_complex11/complex16.gif)
+
+![](autopoietic_complex11/complex17.gif)
+
+![](autopoietic_complex11/complex21.gif)
+
+![](autopoietic_complex11/complex22.gif)
+
 ![](autopoietic_complex8/complex13.gif)
 
 ![](autopoietic_complex8/complex14.gif)
