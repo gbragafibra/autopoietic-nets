@@ -35,11 +35,19 @@ def NOR(inputs):
 def XNOR(inputs):
     return 1 - XOR(inputs)
 
+def Tautology(inputs):
+    return 1
+
+def Contradiction(inputs):
+    return 0
+
 #----------------------------
 
 
 #gates = [AND, OR, XOR, NAND, NOR, XNOR]
-gates = [AND, OR, XOR] #without neg gates
+gates = [AND, OR, XOR, Tautology]
+#gates = [AND, OR, XOR, Contradiction]
+#gates = [AND, OR, XOR] #without neg gates
 
 #Compute entropy of the net
 def H(S):
@@ -55,15 +63,15 @@ Params and conditions
 N = 200 #neuron count -> N² neurons generated
 N_iter = 50 #number of iterations
 S = np.zeros((N, N))
-S[80:120, 80:120] = 1
+S[80:120, 80:120] = 1   
 #S = np.random.choice((0,1), size = (N, N)) #init state
-fix = True #to have ε fixed
+fix = False #to have ε fixed
 ε_fixed = 3#if ε fixed 
-k = 2.5 #If not fixed -> used denominator -> At max ε -> N_iter/k
+k = 5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 2.5#radius for consideration
+radius = 3.5#radius for consideration
 
 """
 compare condition between Φ and ε
