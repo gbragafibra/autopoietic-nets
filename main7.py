@@ -53,9 +53,9 @@ Params and conditions
 """
 N = 200 #neuron count -> N² neurons generated
 N_iter = 50 #number of iterations
-#S = np.zeros((N, N))
-#S[80:120, 80:120] = 1   
-S = np.random.choice((0,1), size = (N, N)) #init state
+S = np.zeros((N, N))
+S[80:120, 80:120] = 1   
+#S = np.random.choice((0,1), size = (N, N)) #init state
 fix = True #to have ε fixed
 ε_fixed = 3#if ε fixed 
 k = 5 #If not fixed -> used denominator -> At max ε -> N_iter/k
@@ -148,6 +148,7 @@ def update(frame, *args):
         for i, j in ensemble_idxs:
         	#update neighbors given central neuron forming ensemble
             gate[np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)] = gate[i, j]
+            S[np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)] = S[i, j]
 
     mat1.set_array(S)
     mat2.set_array(Φ)
