@@ -13,11 +13,25 @@ def OR(inputs):
     return 1 - np.prod(1 - inputs)
 
 def XOR(inputs): #not sure if this is the correct description of XOR (continuous)
-    return np.sin(np.pi * np.sum(inputs))**2
+    return abs(np.sin(np.pi * np.sum(inputs)))
 
+def MAJORITY(inputs):
+    return np.mean(inputs > 0.5)
+
+def MINORITY(inputs):
+    return np.mean(inputs <= 0.5)
+
+def MIN(inputs): #variant of AND?
+    return np.min(inputs)
+
+def MAX(inputs): #variant of OR?
+    return np.max(inputs)
+
+def MEAN(inputs):
+    return np.mean(inputs)
 #----------------------------
-gates = [AND, OR, XOR] #without neg gates
-
+#MAJORITY and MINORITY gate don't work well together
+gates = [MAJORITY, MAX, MIN, MEAN] 
 
 #Compute entropy of the net
 def H(S):
@@ -39,8 +53,8 @@ S[80:120, 80:120] = np.random.rand()
 #S = np.random.rand(N, N) # ∈ [0, 1] #rand init
 
 fix = True #to have ε fixed
-ε_fixed = 2#if ε fixed 
-k = 5 #If not fixed -> used denominator -> At max ε -> N_iter/k
+ε_fixed = 3#if ε fixed 
+k = 10 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
@@ -62,7 +76,7 @@ def dynamics(*args, fixed = False):
     if fixed: #fixed assignment of ε
         return ε_fixed
     else:
-        return int((N_iter * (1 - H(S)))/k)
+        return np.maximum(0, int((N_iter * (1 - H(S)))/k))
 
 ε = dynamics(fixed = fix) #init ε
         
