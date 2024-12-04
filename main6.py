@@ -48,11 +48,12 @@ N = 200 #neuron count -> N² neurons generated
 N_iter = 50 #number of iterations
 
 S = np.zeros((N, N))
+#S[150:250, 150:250] = np.random.rand() 
 S[80:120, 80:120] = np.random.rand() 
 
 #S = np.random.rand(N, N) # ∈ [0, 1] #rand init
 
-fix = True #to have ε fixed
+fix = False #to have ε fixed
 ε_fixed = 3#if ε fixed 
 k = 10 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
@@ -147,7 +148,8 @@ def update(frame, *args):
         ensemble_idxs = np.argwhere(mask_ensemble)
         for i, j in ensemble_idxs:
         	#update neighbors given central neuron forming ensemble
-            S[np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)] = S[i, j]
+            idxs = np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)
+            S[idxs] = np.where(Φ[idxs] == ε, S[i, j], S[idxs]) #propagating only to units with Φ == ε
 
     mat1.set_array(S)
     mat2.set_array(Φ)
