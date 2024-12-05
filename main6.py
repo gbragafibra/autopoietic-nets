@@ -53,14 +53,14 @@ S[80:120, 80:120] = np.random.rand()
 
 #S = np.random.rand(N, N) # ∈ [0, 1] #rand init
 
-fix = False #to have ε fixed
-ε_fixed = 3#if ε fixed 
-k = 10 #If not fixed -> used denominator -> At max ε -> N_iter/k
+fix = True #to have ε fixed
+ε_fixed = 20#if ε fixed 
+k = 5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 2.5#radius for consideration
-θ = 1e-10 #precision
+radius = 2.2#radius for consideration
+θ = 1e-1 #precision
 
 
 """
@@ -107,12 +107,10 @@ def update(frame, *args):
 
     # reallocate gate choice again (local-wise)
     # if synchronization count too high
-
     """
     if np.mean(Φ) >= ε:
         gate = np.random.choice(gates, (N, N))
     """
-
     #------
     #choose a gate randomly for each iteration (globally)
     #gate = np.random.choice(gates) 
@@ -148,9 +146,12 @@ def update(frame, *args):
         ensemble_idxs = np.argwhere(mask_ensemble)
         for i, j in ensemble_idxs:
         	#update neighbors given central neuron forming ensemble
+            #S[np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)] = S[i, j]
             idxs = np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)
-            S[idxs] = np.where(Φ[idxs] == ε, S[i, j], S[idxs]) #propagating only to units with Φ == ε
-
+            #S[idxs] = np.where(Φ[idxs] < ε, S[i, j], S[idxs]) #propagating only to units with Φ < ε
+            S[idxs] = np.where(Φ[idxs] > ε, S[i, j], S[idxs]) #propagating only to units with Φ > ε
+            #S[idxs] = np.where(Φ[idxs] == ε, S[i, j], S[idxs]) #propagating only to units with Φ == ε
+            #gate[idxs] = np.where(Φ[idxs] == ε, gate[i, j], gate[idxs]) #also propagation of gate
     mat1.set_array(S)
     mat2.set_array(Φ)
 
