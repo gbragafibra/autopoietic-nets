@@ -54,12 +54,12 @@ S[80:120, 80:120] = np.random.rand()
 #S = np.random.rand(N, N) # ∈ [0, 1] #rand init
 
 fix = True #to have ε fixed
-ε_fixed = 20#if ε fixed 
+ε_fixed = 10#if ε fixed 
 k = 5 #If not fixed -> used denominator -> At max ε -> N_iter/k
 Φ = np.zeros((N, N), dtype=int) #To keep track of synchronization at each neuron/ensemble
 
 
-radius = 2.2#radius for consideration
+radius = 2.5#radius for consideration
 θ = 1e-1 #precision
 
 
@@ -149,9 +149,11 @@ def update(frame, *args):
             #S[np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)] = S[i, j]
             idxs = np.roll(np.roll(d_mask, i - N//2, axis = 0), j - N//2, axis = 1)
             #S[idxs] = np.where(Φ[idxs] < ε, S[i, j], S[idxs]) #propagating only to units with Φ < ε
-            S[idxs] = np.where(Φ[idxs] > ε, S[i, j], S[idxs]) #propagating only to units with Φ > ε
-            #S[idxs] = np.where(Φ[idxs] == ε, S[i, j], S[idxs]) #propagating only to units with Φ == ε
+            #S[idxs] = np.where(Φ[idxs] > ε, S[i, j], S[idxs]) #propagating only to units with Φ > ε
+            S[idxs] = np.where(Φ[idxs] == ε, S[i, j], S[idxs]) #propagating only to units with Φ == ε
             #gate[idxs] = np.where(Φ[idxs] == ε, gate[i, j], gate[idxs]) #also propagation of gate
+            #gate[idxs] = np.where(Φ[idxs] < ε, gate[i, j], gate[idxs])
+            gate[idxs] = np.where(Φ[idxs] > ε, gate[i, j], gate[idxs])
     mat1.set_array(S)
     mat2.set_array(Φ)
 
